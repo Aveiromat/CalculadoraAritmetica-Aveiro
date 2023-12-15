@@ -1,65 +1,52 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, defineProps } from 'vue';
 import Cabecalho from './components/Cabecalho.vue';
 import Formulario from './components/Formulario.vue';
-import ListaDeTarefas from './components/ListaDeTarefas.vue';
 
-const estado = reactive({
-  filtro: 'todas',
-  tarefaTemp: '',
-  tarefa: [
-    {
-      titulo: 'Estudar ES6',
-      finalizada: false,
-    },
-    {
-      titulo: 'Estudar SASS',
-      finalizada: false,
-    },
-    {
-      titulo: 'Ir para a academia',
-      finalizada: true,
-    },
-  ]
-})
+let estado = reactive({
+  primeiroNumero: '',
+  segundoNumero: '',
+  operacao: 'soma',
+  resultado: null,
+});
 
-const getTarefasPendentes = () => {
-  return estado.tarefa.filter(tarefa => !tarefa.finalizada)
-}
+const calcularResultado = () => {
+  let num1 = parseFloat(estado.primeiroNumero);
+  let num2 = parseFloat(estado.segundoNumero);
 
-const getTarefasFinalizadas = () => {
-  return estado.tarefa.filter(tarefa => tarefa.finalizada)
-}
-
-
-const getTarefasFiltradas = () => {
-  const { filtro } = estado
-
-  switch (filtro) {
-    case 'pendentes':
-      return getTarefasPendentes();
-    case 'finalizadas':
-      return getTarefasFinalizadas();
+  switch (estado.operacao) {
+    case 'soma':
+      estado.resultado = num1 + num2;
+      break;
+    case 'subtracao':
+      estado.resultado = num1 - num2;
+      break;
+    case 'multiplicacao':
+      estado.resultado = num1 * num2;
+      break;
+    case 'divisao':
+      estado.resultado = num1 / num2;
+      break;
     default:
-      return estado.tarefa;
+      estado.resultado = null;
   }
-}
-
-const cadastraTarefa = () => {
-  const tarefaNova = {
-    titulo: estado.tarefaTemp,
-    finalizada: false,
-  }
-  estado.tarefa.push(tarefaNova);
-  estado.tarefaTemp = '';
-}
+};
 </script>
 
 <template>
-  <div class="container d-flex flex-column vh-100 justify-content-center col-6 offset-3">
+  <div class="container d-flex flex-column vh-100 justify-content-center col-12">
     <div>
-      <Cabecalho :tarefaPendentes="getTarefasPendentes().length" />
-      <Formulario :trocarFiltro="evento => estado.filtro = evento.target.value" :tarefaTemp="estado.tarefaTemp" :editaTarefaTemp="evento => estado.tarefaTemp = evento.target.value" :cadastraTarefa="cadastraTarefa" />
+      <h1 class="col-12 d-flex justify-content-center pb-3">Calculadora Aritmética</h1>
+      <Formulario
+        :operacao="estado.operacao"
+        :primeiroNumero="estado.primeiroNumero"
+        :segundoNumero="estado.segundoNumero"
+        :editaPrimeiroNumero="evento => (estado.primeiroNumero = evento)"
+        :editaSegundoNumero="evento => (estado.segundoNumero = evento)"
+        :calcularResultado="calcularResultado"
+      />
+      <Cabecalho :resultado="estado.resultado" />
+      <span>{{ resultado }}</span>
     </div>
   </div>
 </template>

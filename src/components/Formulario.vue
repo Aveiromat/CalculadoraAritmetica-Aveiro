@@ -1,25 +1,30 @@
 <script setup>
-    const props = defineProps(['cadastraTarefa', 'tarefaTemp', 'trocarFiltro', 'editaTarefaTemp'])
+import { defineProps, defineEmits } from 'vue';
+
+let props = defineProps(['operacao', 'primeiroNumero', 'segundoNumero']);
+let emits = defineEmits(['editaPrimeiroNumero', 'editaSegundoNumero', 'calcularResultado']);
+
+const calcularEmitindoEvento = () => {
+    emits.calcularResultado();
+};
 </script>
 
 <template>
-    <form @submit.prevent="props.cadastraTarefa">
+    <form @submit.prevent="calcularEmitindoEvento">
         <div class="row">
             <div class="col">
-                <input :value="props.tarefaTemp" @change="props.editaTarefaTemp" required
-                    type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
+                <input v-model="props.primeiroNumero" @input="editaPrimeiroNumero" required type="text" placeholder="Digite aqui o primeiro número" class="form-control text-center">
+            </div>
+            <div class="col-md-1">
+                <select v-model="props.operacao" class="form-control text-center">
+                    <option value="soma">+</option>
+                    <option value="subtracao">-</option>
+                    <option value="multiplicacao">x</option>
+                    <option value="divisao">/</option>
+                </select>
             </div>
             <div class="col">
-                <input :value="props.tarefaTemp" @change="props.editaTarefaTemp" required
-                    type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
-            </div>
-            <div class="col-md-2">
-                <select @change="props.trocarFiltro" class="form-control">
-                    <option value="todas">Soma</option>
-                    <option value="pendentes">Subtração </option>
-                    <option value="finalizadas">Multiplicação</option>
-                    <option value="finalizadas">Divisão</option>
-                </select>
+                <input v-model="props.segundoNumero" @input="editaSegundoNumero" required type="text" placeholder="Digite aqui o segundo número" class="form-control text-center">
             </div>
         </div>
     </form>

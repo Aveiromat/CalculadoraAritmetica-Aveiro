@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <header class="p-5 mb-4 mt-4 bg-light rounded-3">
+    <header class="p-5 mb-4 mt-4 bg-light rounded-3 d-flex justify-content-center">
         <h1>
             O resultado é: {{ props.tarefaPendentes }}
         </h1> 
